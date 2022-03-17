@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
 from django.utils import timezone
+from django.db.models import QuerySet
 
 from cards.models import Card
 from .serializers import CardSerializer
@@ -17,11 +18,33 @@ class CardViewSet(ModelViewSet):
 
     @action(methods=["post"], detail=True)
     def activate(self, request, pk=None):
-        card = self.get_object()
-        card.status = "activated"
-        card.save()
+        self.set_status("activated")
 
         return Response(status=status.HTTP_200_OK)
+
+    @action(methods=["post"], detail=True)
+    def deactivate(self, request, pk=None):
+        self.set_status("not activated")
+
+        return Response(status=status.HTTP_200_OK)
+
+    def set_status(self, status: str):
+        card = self.get_object()
+        card.status = status
+        card.save()
+
+    @action(methods=["get"], detail=False, url_path="active")
+    def get_active_cards(self, request):
+        data = self.get_many_data(Card.objects.activated())
+        return Response(data=data, status=status.HTTP_200_OK)
+
+    @action(methods=["get"], detail=False, url_path="inactive")
+    def get_inactive_cards(self, request):
+        data = self.get_many_data(Card.objects.not_active())
+        return Response(data=data, status=status.HTTP_200_OK)
+
+    def get_many_data(self, queryset: QuerySet):
+        return self.serializer_class(queryset, many=True).data
 
     def create(self, request: Request, *args, **kwargs):
         data = request.data

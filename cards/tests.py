@@ -34,8 +34,30 @@ class CardViewSetTest(APITestCase):
         card.refresh_from_db()
         self.assertEqual(card.status, "activated")
 
+    def test_it_deactivates_card(self):
+        card = CardFactory(status="activated")
+        response = self.client.post(f"/api/v1/cards/{card.id}/deactivate/")
 
-class CardListAPITest(APITestCase):
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        card.refresh_from_db()
+        self.assertEqual(card.status, "not activated")
+
+    def test_it_responses_active_cards(self):
+        CardFactory.create_batch(3, status="activated")
+        CardFactory.create_batch(2, status="not activated")
+
+        response = self.client.get("/api/v1/cards/active/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 3)
+
+    def test_it_responses_inactive_cards(self):
+        CardFactory.create_batch(3, status="activated")
+        CardFactory.create_batch(2, status="not activated")
+
+        response = self.client.get("/api/v1/cards/inactive/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
     def test_it_responses_card_list(self):
         CardFactory.create_batch(3)
         response = self.client.get("/api/v1/cards/")
@@ -43,4 +65,20 @@ class CardListAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
+class SearchCardTest(APITestCase):
+    def setUp(self) -> None:
+        self.url = "/api/v1/cards/search={}"
 
+    def test_it_finds_by_serial_number(self):
+        card = CardFactory()
+
+        response = self.client.get(self.url.format(card.serial_number))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, card.serial_number)
+
+    def test_it_finds_by_number(self):
+        card = CardFactory()
+
+        response = self.client.get(self.url.format(card.number))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, card.number)
