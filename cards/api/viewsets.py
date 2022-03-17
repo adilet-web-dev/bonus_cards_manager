@@ -5,6 +5,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from django.utils import timezone
 from django.db.models import QuerySet
 
@@ -15,6 +16,8 @@ from .serializers import CardSerializer
 class CardViewSet(ModelViewSet):
     serializer_class = CardSerializer
     queryset = Card.objects.all()
+
+    permission_classes = [IsAuthenticated]
 
     @action(methods=["post"], detail=True)
     def activate(self, request, pk=None):

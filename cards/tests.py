@@ -2,11 +2,17 @@ from django.utils import timezone
 
 from rest_framework.test import APITestCase
 from rest_framework import status
+
 from cards.factories import CardFactory
 from cards.models import Card
+from users.factories import UserFactory
 
 
 class CardViewSetTest(APITestCase):
+    def setUp(self) -> None:
+        self.user = UserFactory()
+        self.client.force_login(self.user)
+
     def test_it_creates_card(self):
         payload = {
             "serial_number": 123,
@@ -68,6 +74,8 @@ class CardViewSetTest(APITestCase):
 class SearchCardTest(APITestCase):
     def setUp(self) -> None:
         self.url = "/api/v1/cards/search={}"
+        self.user = UserFactory()
+        self.client.force_login(self.user)
 
     def test_it_finds_by_serial_number(self):
         card = CardFactory()
