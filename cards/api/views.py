@@ -10,6 +10,7 @@ from cards.api.serializers import CardSerializer
 class SearchCardListAPIView(ListAPIView):
 
     permission_classes = [IsAuthenticated]
+    serializer_class = CardSerializer
 
     def list(self, request, *args, **kwargs):
         query = kwargs["query"]
