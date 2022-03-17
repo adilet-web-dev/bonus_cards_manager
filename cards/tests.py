@@ -8,7 +8,7 @@ from cards.models import Card
 from users.factories import UserFactory
 
 
-class CardViewSetTest(APITestCase):
+class CardTest(APITestCase):
     def setUp(self) -> None:
         self.user = UserFactory()
         self.client.force_login(self.user)
@@ -31,6 +31,18 @@ class CardViewSetTest(APITestCase):
         self.client.delete(f"/api/v1/cards/{card.id}/")
 
         self.assertFalse(Card.objects.filter(id=card.id).exists())
+
+    def test_it_responses_card_list(self):
+        CardFactory.create_batch(3)
+        response = self.client.get("/api/v1/cards/")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class CardActivationTest(APITestCase):
+    def setUp(self) -> None:
+        self.user = UserFactory()
+        self.client.force_login(self.user)
 
     def test_it_activates_card(self):
         card = CardFactory(status="not activated")
@@ -63,12 +75,6 @@ class CardViewSetTest(APITestCase):
         response = self.client.get("/api/v1/cards/inactive/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
-
-    def test_it_responses_card_list(self):
-        CardFactory.create_batch(3)
-        response = self.client.get("/api/v1/cards/")
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
 class SearchCardTest(APITestCase):
