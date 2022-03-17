@@ -17,6 +17,9 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+documentation is available on `/swagger` (example `localhost:8000/swagger`)
+
+
 You can also use docker
 ```shell
 docker-compose up

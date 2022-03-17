@@ -10,6 +10,7 @@ djangorestframework = "*"
 factory-boy = "*"
 dj-database-url = "*"
 python-dotenv = "*"
+drf-yasg = "*"
 
 [dev-packages]
 
