@@ -1,5 +1,5 @@
 from django.urls import path
-from cards.api.views import SearchCardListAPIView
+from apps.cards.api.views import SearchCardListAPIView
 
 
 urlpatterns = [

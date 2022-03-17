@@ -2,7 +2,7 @@ import factory
 from factory import fuzzy
 from django.utils import timezone
 
-from cards.models import Card
+from apps.cards.models import Card
 
 
 class CardFactory(factory.django.DjangoModelFactory):

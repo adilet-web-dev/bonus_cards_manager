@@ -3,10 +3,10 @@ from django.utils import timezone
 from rest_framework.test import APITestCase
 from rest_framework import status
 
-from cards.factories import CardFactory
-from cards.models import Card
-from users.factories import UserFactory
-from payments.factories import PaymentFactory
+from apps.cards.factories import CardFactory
+from apps.cards.models import Card
+from apps.users.factories import UserFactory
+from apps.payments.factories import PaymentFactory
 
 
 class CardTest(APITestCase):

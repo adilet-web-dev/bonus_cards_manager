@@ -12,13 +12,14 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import dj_database_url
-import os
+import os, sys
 from dotenv import load_dotenv
 
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -46,9 +47,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     # local
-    'cards.apps.CardsConfig',
-    'users.apps.UsersConfig',
-    'payments.apps.PaymentsConfig'
+    'apps.cards.apps.CardsConfig',
+    'apps.users.apps.UsersConfig',
+    'apps.payments.apps.PaymentsConfig'
 
 ]
 

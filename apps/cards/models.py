@@ -1,8 +1,6 @@
 from django.db import models
-from django.utils import timezone
 
-
-from cards.managers import CardManager
+from apps.cards.managers import CardManager
 
 
 class Card(models.Model):

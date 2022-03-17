@@ -9,9 +9,9 @@ from rest_framework.permissions import IsAuthenticated
 from django.utils import timezone
 from django.db.models import QuerySet
 
-from cards.models import Card
+from apps.cards.models import Card
 from .serializers import CardSerializer
-from payments.api.serializers import PaymentSerializer
+from apps.payments.api.serializers import PaymentSerializer
 
 
 class CardViewSet(ModelViewSet):

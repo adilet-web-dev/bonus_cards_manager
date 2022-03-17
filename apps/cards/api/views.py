@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
-from cards.models import Card
-from cards.api.serializers import CardSerializer
+from apps.cards.models import Card
+from apps.cards.api.serializers import CardSerializer
 
 
 class SearchCardListAPIView(ListAPIView):

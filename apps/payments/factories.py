@@ -2,8 +2,8 @@ import factory
 from factory import fuzzy
 from django.utils import timezone
 
-from cards.models import Card
-from payments.models import Payment
+from apps.cards.models import Card
+from apps.payments.models import Payment
 
 
 class PaymentFactory(factory.django.DjangoModelFactory):
