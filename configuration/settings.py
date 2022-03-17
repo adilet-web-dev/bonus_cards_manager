@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     # local
     'cards.apps.CardsConfig',
-    'users.apps.UsersConfig'
+    'users.apps.UsersConfig',
+    'payments.apps.PaymentsConfig'
 
 ]
 

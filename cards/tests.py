@@ -6,6 +6,7 @@ from rest_framework import status
 from cards.factories import CardFactory
 from cards.models import Card
 from users.factories import UserFactory
+from payments.factories import PaymentFactory
 
 
 class CardTest(APITestCase):
@@ -96,3 +97,19 @@ class SearchCardTest(APITestCase):
         response = self.client.get(self.url.format(card.number))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, card.number)
+
+
+class CardHistoryTest(APITestCase):
+    def setUp(self) -> None:
+        self.user = UserFactory()
+        self.client.force_login(self.user)
+
+    def test_it_shows_card_history(self):
+        card = CardFactory()
+        payments: list = PaymentFactory.create_batch(3, card=card)
+
+        response = self.client.get(f"/api/v1/cards/{card.id}/payments/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, payments[0].amount)
+        self.assertContains(response, payments[1].amount)
+        self.assertContains(response, payments[2].amount)

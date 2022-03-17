@@ -11,6 +11,7 @@ from django.db.models import QuerySet
 
 from cards.models import Card
 from .serializers import CardSerializer
+from payments.api.serializers import PaymentSerializer
 
 
 class CardViewSet(ModelViewSet):
@@ -66,3 +67,11 @@ class CardViewSet(ModelViewSet):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
         return Response(status=status.HTTP_201_CREATED)
+
+    @action(methods=["get"], detail=True, url_path="payments")
+    def payments_history(self, request, *args, **kwargs):
+        card: Card = self.get_object()
+        payments = card.payments.all()
+
+        serializer = PaymentSerializer(payments, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
