@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     # third party
     'rest_framework',
     # local
-    'cards.config.CardsConfig'
+    'cards.apps.CardsConfig'
 
 ]
 
