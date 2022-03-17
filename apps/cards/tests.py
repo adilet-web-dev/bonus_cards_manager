@@ -18,7 +18,7 @@ class CardTest(APITestCase):
         payload = {
             "serial_number": 123,
             "quantity": 10,
-            "ends_at": timezone.now() + timezone.timedelta(days=10)
+            "ends_at": timezone.now() + timezone.timedelta(days=10),
         }
 
         response = self.client.post("/api/v1/cards/", payload)
