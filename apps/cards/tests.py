@@ -77,6 +77,15 @@ class CardActivationTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
 
+    def test_card_activity_representation(self):
+        card = CardFactory(ends_at=timezone.now() - timezone.timedelta(days=3))
+        response = self.client.get(f"/api/v1/cards/{card.id}/")
+        self.assertEqual(response.data["status"], "not activated")
+
+        card = CardFactory(ends_at=timezone.now() + timezone.timedelta(days=3))
+        response = self.client.get(f"/api/v1/cards/{card.id}/")
+        self.assertEqual(response.data["status"], "expired")
+
 
 class SearchCardTest(APITestCase):
     def setUp(self) -> None:

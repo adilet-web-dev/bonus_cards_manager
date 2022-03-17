@@ -11,6 +11,8 @@ factory-boy = "*"
 dj-database-url = "*"
 python-dotenv = "*"
 drf-yasg = "*"
+schedule = "*"
+black = "*"
 
 [dev-packages]
 
