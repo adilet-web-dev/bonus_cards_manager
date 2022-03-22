@@ -1,3 +1,5 @@
+import random
+
 from django.utils import timezone
 
 from rest_framework.test import APITestCase
@@ -46,7 +48,7 @@ class CardActivationTest(APITestCase):
         self.client.force_login(self.user)
 
     def test_it_activates_card(self):
-        card = CardFactory(status="not activated")
+        card = CardFactory(status="not activated", ends_at=self.create_random_future_datetime())
         response = self.client.post(f"/api/v1/cards/{card.id}/activate/")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -54,7 +56,7 @@ class CardActivationTest(APITestCase):
         self.assertEqual(card.status, "activated")
 
     def test_it_deactivates_card(self):
-        card = CardFactory(status="activated")
+        card = CardFactory(status="activated", ends_at=self.create_random_future_datetime())
         response = self.client.post(f"/api/v1/cards/{card.id}/deactivate/")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -78,14 +80,21 @@ class CardActivationTest(APITestCase):
         self.assertEqual(len(response.data), 2)
 
     def test_card_activity_representation(self):
-        card = CardFactory(ends_at=timezone.now() - timezone.timedelta(days=3))
+        card = CardFactory(ends_at=self.create_random_future_datetime())
         response = self.client.get(f"/api/v1/cards/{card.id}/")
         self.assertEqual(response.data["status"], "not activated")
 
-        card = CardFactory(ends_at=timezone.now() + timezone.timedelta(days=3))
+        card = CardFactory(ends_at=self.create_random_past_datetime())
         response = self.client.get(f"/api/v1/cards/{card.id}/")
-        # self.assertEqual(response.data["status"], "expired") not ready!
+        self.assertEqual(response.data["status"], "expired")
 
+    def create_random_future_datetime(self):
+        random_days = random.randint(1, 20)
+        return timezone.now() + timezone.timedelta(days=random_days)
+
+    def create_random_past_datetime(self):
+        random_days = random.randint(1, 20)
+        return timezone.now() - timezone.timedelta(days=random_days)
 
 class SearchCardTest(APITestCase):
     def setUp(self) -> None:

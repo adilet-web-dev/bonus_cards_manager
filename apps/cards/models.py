@@ -10,6 +10,21 @@ class Card(models.Model):
     created_at = models.DateTimeField()
     ends_at = models.DateTimeField()
     amount = models.IntegerField()
-    status = models.CharField(max_length=50, default="not activated")
+    _status = models.CharField(max_length=50, default="not activated")
+
+    @property
+    def status(self):
+        return self._status
+
+    @status.getter
+    def status(self):
+        if self.ends_at <= timezone.now():
+            return "expired"
+        else:
+            return self._status
+
+    @status.setter
+    def status(self, value):
+        self._status = value
 
     objects = CardManager()
